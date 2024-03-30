@@ -3,16 +3,21 @@ from fastapi.responses import PlainTextResponse, JSONResponse
 
 app = FastAPI()
 
+
+
+def get_user_info()->(str,str) :
+    username = "testuser"
+    short_description = "my bio"
+    return username, short_description
+
+
 @app.get("/test", response_class=JSONResponse)
 def test_endpoint():
-    return {
-        "test key": "some key", 
-        "another key" : "another value", 
-        "nested key" : 
-               {
-                "internal_nested_key":"internal_nested_value"
-                }
-            }
+    username, short_description = get_user_info()
+
+    return {"username":"testuser", "short_description": "my bio"}
+    
+
 
 
 @app.get("/")
