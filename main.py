@@ -5,7 +5,14 @@ app = FastAPI()
 
 @app.get("/test", response_class=JSONResponse)
 def test_endpoint():
-    return {"test key": "some key", "another key" : "another value"}
+    return {
+        "test key": "some key", 
+        "another key" : "another value", 
+        "nested key" : 
+               {
+                "internal_nested_key":"internal_nested_value"
+                }
+            }
 
 
 @app.get("/")
