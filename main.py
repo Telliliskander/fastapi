@@ -1,8 +1,9 @@
 from fastapi import FastAPI
+from fastapi.responses import PlainTextResponse
 
 app = FastAPI()
 
-@app.get("/test")
+@app.get("/test", response_class=PlainTextResponse)
 def test_endpoint():
     return "hello this is a test"
 
