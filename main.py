@@ -1,11 +1,11 @@
 from fastapi import FastAPI
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import PlainTextResponse, JSONResponse
 
 app = FastAPI()
 
-@app.get("/test", response_class=PlainTextResponse)
+@app.get("/test", response_class=JSONResponse)
 def test_endpoint():
-    return "hello this is a test"
+    return {"test key": "some key", "another key" : "another value"}
 
 
 @app.get("/")
