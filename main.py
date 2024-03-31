@@ -1,21 +1,29 @@
 from fastapi import FastAPI
 from fastapi.responses import PlainTextResponse, JSONResponse
+from pydantic import BaseModel
 
 app = FastAPI()
 
+class User(BaseModel):
+    username : str
+    description : str
 
+def get_user_info() -> list[str, str]:
 
-def get_user_info()->(str,str) :
     username = "testuser"
     short_description = "my bio"
+
     return username, short_description
 
 
-@app.get("/test", response_class=JSONResponse)
+@app.get("/user/me", response_model=User)
 def test_endpoint():
+
     username, short_description = get_user_info()
 
-    return {"username":"testuser", "short_description": "my bio"}
+    user = User(username=username, description = short_description)
+
+    return user
     
 
 
