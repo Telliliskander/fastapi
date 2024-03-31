@@ -1,16 +1,22 @@
 from fastapi import FastAPI
 from fastapi.responses import PlainTextResponse, JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
-
 
 
 app = FastAPI()
 
 
-
 class User(BaseModel):
-    username : str
+
+    username : str = Field( # the fiel puts add attributes and put constraints over username.
+        alias = "name",
+        title = "The username",
+        description = "this is the username of the user",
+        min_length = 1,
+        max_length = 20,
+        default = None
+    )
     description : str = "My bio description"
     liked_posts : Optional[list[int]]=None
 
@@ -19,9 +25,9 @@ class User(BaseModel):
 def get_user_info() -> User:
 
     content = {
-        "username" : "testuser",
-        # "description" : "My bio description",
-        # "liked_posts" : None
+        "name" : "testuser",
+        "description" : "My bio description",
+        "liked_posts" : None
     }
 
     return User(**content)
@@ -34,7 +40,6 @@ def test_endpoint():
 
     return user
     
-
 
 
 @app.get("/")
