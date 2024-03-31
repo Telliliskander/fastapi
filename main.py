@@ -21,19 +21,37 @@ class User(BaseModel):
     liked_posts : Optional[list[int]]=None
 
 
+class FullUserProfile(User):
+    
+    short_description : str
+    long_bio : str
 
-def get_user_info() -> User:
 
-    content = {
-        "name" : "testuser",
-        "description" : "My bio description",
-        "liked_posts" : None
+
+def get_user_info() -> FullUserProfile:
+
+    profile_info = {
+        "short_description": "My bio description",
+        "long_bio" : "This is our longer bio",
+    }
+    
+
+    user_content = {
+        "liked_posts" : [1]*3,
+        "profile_info" : profile_info
     }
 
-    return User(**content)
+    user = User(**user_content)
+
+    fulluserprofile = {
+        **profile_info,
+        **user.dict()
+    }
+
+    return FullUserProfile(**fulluserprofile)
 
 
-@app.get("/user/me", response_model=User)
+@app.get("/user/me", response_model=FullUserProfile)
 def test_endpoint():
 
     user = get_user_info()
