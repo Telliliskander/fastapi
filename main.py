@@ -81,7 +81,15 @@ def get_user_info(user_id : int = 0) -> FullUserProfile:
 
 
 def create_update_user(full_profile_info : FullUserProfile, new_user_id : Optional[int] = None) -> int:
-   
+    '''
+    Create user and new unique user id if not exist otherwise update the user
+    Placeholder imlementation later to be updated with DB
+
+    param: full_profile_info: FullUserProfile - User information saved in database
+    param: user_id : Optional[int] - user_id if already exists, otherwise to be set
+    ;return: user_id : int - existing or new user id 
+'''
+
 
     global profile_infos
     global users_content
@@ -161,6 +169,7 @@ def get_all_users_paginated(start : int = 0, limit : int = 2):
 @app.post("/users", response_model=CreateUserResponse)
 def add_user(full_profile_info : FullUserProfile):
     created_user_id = create_update_user(full_profile_info)
+    print(create_update_user.__doc__)
     return CreateUserResponse(user_id=created_user_id)
 
 
