@@ -5,7 +5,6 @@ from typing import Optional
 
 
 
-
 app = FastAPI()
 
 # ------------------- Variables ---------------------------------
@@ -24,9 +23,6 @@ users_content = {
         "liked_posts" : [1]*3,
     },
 }
-
-
-
 
 
 
@@ -65,8 +61,9 @@ class MultipleUsersResponse(BaseModel):
 
 #--------------------- Functions ---------------------------------
 
-def get_user_info(user_id : int = 0) -> FullUserProfile:
+async def get_user_info(user_id : int = 0) -> FullUserProfile:
 
+    
     profile_info = profile_infos[user_id]      
     user_content = users_content[user_id]
     
@@ -80,7 +77,7 @@ def get_user_info(user_id : int = 0) -> FullUserProfile:
     return FullUserProfile(**fulluserprofile)
 
 
-def create_update_user(full_profile_info : FullUserProfile, new_user_id : Optional[int] = None) -> int:
+async def create_update_user(full_profile_info : FullUserProfile, new_user_id : Optional[int] = None) -> int:
     '''
     Create user and new unique user id if not exist otherwise update the user
     Placeholder imlementation later to be updated with DB
@@ -109,7 +106,7 @@ def create_update_user(full_profile_info : FullUserProfile, new_user_id : Option
     return new_user_id
 
 
-def get_all_users_with_pagination(start : int, limit : int) -> tuple[list[FullUserProfile], int]:
+async def get_all_users_with_pagination(start : int, limit : int) -> tuple[list[FullUserProfile], int]:
 
     list_of_users = []
     keys = list(profile_infos.keys())  
@@ -121,7 +118,7 @@ def get_all_users_with_pagination(start : int, limit : int) -> tuple[list[FullUs
             continue
 
         current_key = keys[index]
-        user = get_user_info(current_key)
+        user = await get_user_info(current_key)
         list_of_users.append(user)
 
         if len(list_of_users) >= limit : 
@@ -130,7 +127,7 @@ def get_all_users_with_pagination(start : int, limit : int) -> tuple[list[FullUs
     return list_of_users, total
 
 
-def delete_user(user_id : int) -> None:
+async def delete_user(user_id : int) -> None:
 
     global profile_infos
     global users_content
@@ -142,46 +139,47 @@ def delete_user(user_id : int) -> None:
 
 
 # --------------------- Endpoints ---------------------------------
-@app.get("/user/me", response_model=FullUserProfile)
-def test_endpoint():
 
-    user = get_user_info()
+@app.get("/user/me", response_model=FullUserProfile)
+async def test_endpoint():
+
+    user = await get_user_info()
 
     return user
 
 
-
 @app.get("/user/{user_id}", response_model=FullUserProfile)
-def test_endpoint_by_id(user_id : int):
+async def test_endpoint_by_id(user_id : int):
 
-    user = get_user_info(user_id)
+    user = await get_user_info(user_id)
 
     return user
 
 
 @app.get("/users", response_model=MultipleUsersResponse)
-def get_all_users_paginated(start : int = 0, limit : int = 2):
-    users, total = get_all_users_with_pagination(start, limit)
+async def get_all_users_paginated(start : int = 0, limit : int = 2):
+    users, total = await get_all_users_with_pagination(start, limit)
     formatted_users = MultipleUsersResponse(users=users, total=total)
     return formatted_users
 
 
 @app.post("/users", response_model=CreateUserResponse)
-def add_user(full_profile_info : FullUserProfile):
-    created_user_id = create_update_user(full_profile_info)
+async def add_user(full_profile_info : FullUserProfile):
+    created_user_id = await create_update_user(full_profile_info)
     print(create_update_user.__doc__)
     return CreateUserResponse(user_id=created_user_id)
 
 
 @app.put("/user/{user_id}")
-def update_user(user_id : int, full_profile_info : FullUserProfile):
+async def update_user(user_id : int, full_profile_info : FullUserProfile):
 
-    create_update_user(full_profile_info, user_id)
+    await create_update_user(full_profile_info, user_id)
+
 
 @app.delete("/user/{user_id}")
-def remove_user(user_id : int) -> None:
+async def remove_user(user_id : int) -> None:
 
-    delete_user(user_id)
+    await delete_user(user_id)
 
 
 @app.get("/")
