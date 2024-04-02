@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from fastapi.responses import PlainTextResponse, JSONResponse
+# from fastapi.responses import PlainTextResponse, JSONResponse
 from pydantic import BaseModel, Field
 from typing import Optional
 
@@ -80,12 +80,14 @@ def get_user_info(user_id : int = 0) -> FullUserProfile:
     return FullUserProfile(**fulluserprofile)
 
 
-def create_user(full_profile_info : FullUserProfile) -> int:
+def create_update_user(full_profile_info : FullUserProfile, new_user_id : Optional[int] = None) -> int:
+   
 
     global profile_infos
     global users_content
 
-    new_user_id = len(profile_infos)
+    if new_user_id is None : 
+        new_user_id = len(profile_infos)
     liked_posts = full_profile_info.liked_posts
     short_description = full_profile_info.short_description
     long_bio = full_profile_info.long_bio 
@@ -120,6 +122,13 @@ def get_all_users_with_pagination(start : int, limit : int) -> tuple[list[FullUs
     return list_of_users, total
 
 
+def delete_user(user_id : int) -> None:
+
+    global profile_infos
+    global users_content
+
+    del profile_infos[user_id]
+    del users_content[user_id]
 
 
 
@@ -151,8 +160,19 @@ def get_all_users_paginated(start : int = 0, limit : int = 2):
 
 @app.post("/users", response_model=CreateUserResponse)
 def add_user(full_profile_info : FullUserProfile):
-    created_user_id = create_user(full_profile_info)
+    created_user_id = create_update_user(full_profile_info)
     return CreateUserResponse(user_id=created_user_id)
+
+
+@app.put("/user/{user_id}")
+def update_user(user_id : int, full_profile_info : FullUserProfile):
+
+    create_update_user(full_profile_info, user_id)
+
+@app.delete("/user/{user_id}")
+def remove_user(user_id : int) -> None:
+
+    delete_user(user_id)
 
 
 @app.get("/")
