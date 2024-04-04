@@ -28,7 +28,7 @@ def create_user_router() -> APIRouter:
         return formatted_users
 
 
-    @user_router.post("/", response_model=CreateUserResponse)
+    @user_router.post("/", response_model=CreateUserResponse, status_code = 201)
     async def add_user(full_profile_info : FullUserProfile):
         created_user_id = await user_service.create_update_user(full_profile_info)
         print(user_service.create_update_user.__doc__)
