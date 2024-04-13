@@ -3,6 +3,13 @@ from app.schemas.user import (FullUserProfile,
                              MultipleUsersResponse, 
                              CreateUserResponse)
 from app.services.user import UserService
+import logging
+
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(filename="log.txt")
+logger.setLevel(logging.INFO) # levels debug -> info -> warning -> error -> critical
+
 
 
 
@@ -14,11 +21,16 @@ def create_user_router() -> APIRouter:
 
 
     @user_router.get("/{user_id}", response_model=FullUserProfile)
-    async def test_endpoint_by_id(user_id : int):
+    async def get_user_by_id(user_id : int):
 
-        user = await user_service.get_user_info(user_id)
+        try :
+            fulluserprofile = await user_service.get_user_info(user_id)
 
-        return user
+        except KeyError:
+            logger.error(f"Invalid user id {user_id} was requested")
+            raise HTTPException(status_code = 404, detail = "User doesn't exist")
+
+        return fulluserprofile
 
 
     @user_router.get("/all", response_model=MultipleUsersResponse)
@@ -43,9 +55,11 @@ def create_user_router() -> APIRouter:
 
     @user_router.delete("/{user_id}")
     async def remove_user(user_id : int) -> None:
+        logger.info(f"About to delete user id {user_id}")
+        logger.debug(f"this is a debug log")
         try :
             await user_service.delete_user(user_id)
         except KeyError:
             raise HTTPException(status_code=404, detail=f"User with id {user_id} doesn't exist")
-#           raise HTTPException(status_code=404, detail={"msg" : "User doesn't exist", "id" : {user_id}})
+#            raise HTTPException(status_code=404, detail={"msg" : "User doesn't exist", "id" : {user_id}})
     return user_router
