@@ -7,11 +7,15 @@ import logging
 
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename="log.txt")
+logging.basicConfig(
+    filename="log.txt",
+    format = '%(levelname)-6s %(name)-15s %(asctime)s %(message)s',
+    datefmt= "%y-%m-%d %H-%M-%S")
 logger.setLevel(logging.INFO) # levels debug -> info -> warning -> error -> critical
 
 
-
+console = logging.StreamHandler()
+logger.addHandler(console)
 
 def create_user_router() -> APIRouter:
     user_router = APIRouter(prefix="/user",

@@ -4,3 +4,6 @@ ERROR:app.routes.user:Invalid user id 1 was requested
 INFO:app.routes.user:About to delete user id 0
 INFO:app.routes.user:About to delete user id 0
 ERROR:app.routes.user:Invalid user id 0 was requested
+ERROR app.routes.user 2024-04-13 12:10:39,956 Invalid user id 1 was requested
+ERROR app.routes.user 2024-04-13 12:12:30,493 Invalid user id 1 was requested
+ERROR  app.routes.user 24-04-13 12-16-40 Invalid user id 6 was requested
