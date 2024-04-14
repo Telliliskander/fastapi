@@ -1,17 +1,13 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Response, Depends
 from app.schemas.user import (FullUserProfile, 
                              MultipleUsersResponse, 
                              CreateUserResponse)
 from app.services.user import UserService
 import logging
+from app.services.dependencies import rate_limit
 
 
 logger = logging.getLogger(__name__)
-# logging.basicConfig(
-#     filename="log.txt",
-#     format = '%(levelname)-6s %(name)-15s %(asctime)s %(message)s',
-#     datefmt= "%y-%m-%d %H-%M-%S")
-# logger.setLevel(logging.INFO) # levels debug -> info -> warning -> error -> critical
 
 
 console = logging.StreamHandler()
@@ -19,20 +15,20 @@ logger.addHandler(console)
 
 def create_user_router() -> APIRouter:
     user_router = APIRouter(prefix="/user",
-                            tags=["user"])
+                            tags=["user"],
+#                       dependencies = [Depends(rate_limit),
+                                            )
 
     user_service = UserService()
 
 
     @user_router.get("/{user_id}", response_model=FullUserProfile)
-    async def get_user_by_id(user_id : int):
-
-#        try :
+    async def get_user_by_id(user_id : int, response : Response): # response : Response = Depends(rate_limit) -> error ?
+        
+        rate_limit(response)  # i got an error trying to implement it using depend !
         fulluserprofile = await user_service.get_user_info(user_id)
 
-#        except KeyError:
-#            logger.error(f"Invalid user id {user_id} was requested")
-#            raise HTTPException(status_code = 404, detail = "User doesn't exist")
+
 
         return fulluserprofile
 
