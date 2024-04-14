@@ -7,11 +7,11 @@ import logging
 
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(
-    filename="log.txt",
-    format = '%(levelname)-6s %(name)-15s %(asctime)s %(message)s',
-    datefmt= "%y-%m-%d %H-%M-%S")
-logger.setLevel(logging.INFO) # levels debug -> info -> warning -> error -> critical
+# logging.basicConfig(
+#     filename="log.txt",
+#     format = '%(levelname)-6s %(name)-15s %(asctime)s %(message)s',
+#     datefmt= "%y-%m-%d %H-%M-%S")
+# logger.setLevel(logging.INFO) # levels debug -> info -> warning -> error -> critical
 
 
 console = logging.StreamHandler()
@@ -27,12 +27,12 @@ def create_user_router() -> APIRouter:
     @user_router.get("/{user_id}", response_model=FullUserProfile)
     async def get_user_by_id(user_id : int):
 
-        try :
-            fulluserprofile = await user_service.get_user_info(user_id)
+#        try :
+        fulluserprofile = await user_service.get_user_info(user_id)
 
-        except KeyError:
-            logger.error(f"Invalid user id {user_id} was requested")
-            raise HTTPException(status_code = 404, detail = "User doesn't exist")
+#        except KeyError:
+#            logger.error(f"Invalid user id {user_id} was requested")
+#            raise HTTPException(status_code = 404, detail = "User doesn't exist")
 
         return fulluserprofile
 
@@ -59,11 +59,8 @@ def create_user_router() -> APIRouter:
 
     @user_router.delete("/{user_id}")
     async def remove_user(user_id : int) -> None:
-        logger.info(f"About to delete user id {user_id}")
-        logger.debug(f"this is a debug log")
-        try :
-            await user_service.delete_user(user_id)
-        except KeyError:
-            raise HTTPException(status_code=404, detail=f"User with id {user_id} doesn't exist")
-#            raise HTTPException(status_code=404, detail={"msg" : "User doesn't exist", "id" : {user_id}})
+#        try :
+        await user_service.delete_user(user_id)
+#        except KeyError:
+#            raise HTTPException(status_code=404, detail=f"User with id {user_id} doesn't exist")
     return user_router
