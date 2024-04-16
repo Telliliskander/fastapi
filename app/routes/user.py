@@ -13,13 +13,13 @@ logger = logging.getLogger(__name__)
 console = logging.StreamHandler()
 logger.addHandler(console)
 
-def create_user_router() -> APIRouter:
+def create_user_router(profile_infos : dict, users_content : dict) -> APIRouter:
     user_router = APIRouter(prefix="/user",
                             tags=["user"],
 #                       dependencies = [Depends(rate_limit),
                                             )
 
-    user_service = UserService()
+    user_service = UserService(profile_infos, users_content)
 
 
     @user_router.get("/{user_id}", response_model=FullUserProfile)
