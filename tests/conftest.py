@@ -1,26 +1,17 @@
-import pytest
-from app.services.user import UserService
+import pytest 
+from app.schemas.user import FullUserProfile
 
-@pytest.fixture
-def _profile_infos():
-    return  {
-        0 : {
-            "short_description": "My bio description",
-            "long_bio" : "This is our longer bio",
-        },
-    }    
-    
-@pytest.fixture  
-def _users_content():
-    return {
+@pytest.fixture(scope='session')
+def valid_user_delete_id() -> int:
+    return 0
 
-        0 : {
-            "liked_posts" : [1]*3,
-        },
-    }
+@pytest.fixture(scope='session')
+def invalid_user_delete_id() -> int:
+    return 1
 
-
-@pytest.fixture
-def user_service(_profile_infos, _users_content):
-    user_service  = UserService(_profile_infos, _users_content)
-    return user_service
+@pytest.fixture(scope="session")
+def sample_full_user_profile() -> FullUserProfile:
+    return FullUserProfile(short_description ="short desc",
+                           long_bio = "def",
+                           username = "abc",
+                           liked_posts= [1,2,3])
