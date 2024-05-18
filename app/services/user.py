@@ -4,7 +4,7 @@ from typing import Optional
 # ------------------- Variables ---------------------------------
 
 
-from app.services.exceptions import UserNotFound
+from app.exceptions import UserNotFound
 
 
 
@@ -49,7 +49,7 @@ class UserService :
 
         fulluserprofile = {
             **profile_info,
-            **user.dict()
+            **user.model_dump()
         }
 
         return FullUserProfile(**fulluserprofile)

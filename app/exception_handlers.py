@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
-from app.services.exceptions import UserNotFound
+from app import UserNotFound
 import logging
 
 logger = logging.getLogger(__name__)

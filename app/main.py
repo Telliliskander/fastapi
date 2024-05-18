@@ -1,10 +1,10 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
-from app import create_user_router
+from app import create_user_router, UserNotFound, add_exception_handlers
 # from fastapi.responses import PlainTextResponse, JSONResponse
 # from typing import Optional
-from app.services.exceptions import UserNotFound
-from app.services.exception_handlers import add_exception_handlers
+
+
 
 
 def create_profile_infos_and_users_content():
