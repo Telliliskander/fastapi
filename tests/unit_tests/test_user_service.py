@@ -1,5 +1,5 @@
 import pytest
-from app.services.exceptions import UserNotFound
+from app import UserNotFound
 
 
 
