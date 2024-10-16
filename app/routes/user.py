@@ -35,11 +35,8 @@ def create_user_router(profile_infos : dict, users_content : dict) -> APIRouter:
 
     @user_router.get("/all", response_model=MultipleUsersResponse)
     async def get_all_users_paginated(start : int = 0, limit : int = 2):
-        print("zeeeebbbbi")
         users, total = await user_service.get_all_users_with_pagination(start, limit)
-        print(type(users))
         formatted_users = MultipleUsersResponse(users=users, total=total)
-        print(type(formatted_users))
         return formatted_users
 
 
