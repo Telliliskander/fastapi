@@ -1,6 +1,6 @@
 # --------------------- Endpoints ---------------------------------
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from app.schemas.user import (
     CreateUserResponse,
     FullUserProfile,
@@ -35,8 +35,12 @@ def create_user_router() -> APIRouter:
 
     @user_router.delete("/{user_id}")
     async def remove_user(user_id : int) -> None:
+        try:
 
-        await user_service.delete_user(user_id)
+            await user_service.delete_user(user_id)
+        except KeyError:
+            raise HTTPException(status_code=404, detail={"msg":f"User  doesn't exist", "user_id":user_id})
+
 
 
 
