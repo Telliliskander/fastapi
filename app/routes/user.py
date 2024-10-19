@@ -5,20 +5,12 @@ from app.schemas.user import (
     CreateUserResponse,
     FullUserProfile,
     MultipleUsersResponse,
-                         )
+    )
 from app.services.user import UserService
 import logging
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(
-    filename="log.txt",
-    format = '%(levelname)-6s %(name)-15s %(asctime)s %(message)s',
-    datefmt= "%y-%m-%d %H-%M-%S")
 
-logger.setLevel(logging.INFO)
-
-console = logging.StreamHandler()
-logger.addHandler(console)
 
 def create_user_router() -> APIRouter:
 
@@ -36,26 +28,16 @@ def create_user_router() -> APIRouter:
 
     @user_router.get("/{user_id}", response_model=FullUserProfile)
     async def get_user_by_id(user_id : int):
-        try :
-            full_user_profile = await user_service.get_user_info(user_id)
-     
-        except KeyError:
-            logger.error(f"Invalid user id {user_id} was requested")
-            raise HTTPException(status_code = 404, detail = "User doesn't exist")
+
+        full_user_profile = await user_service.get_user_info(user_id)
 
         return full_user_profile
 
     @user_router.delete("/{user_id}")
     async def remove_user(user_id : int) -> None:
-        logger.info(f"About to delete user id {user_id}")
-        logger.debug(f"this is a debug log")
-        try:
 
             await user_service.delete_user(user_id)
-        except KeyError:
-  
-            raise HTTPException(status_code=404, detail={"msg":f"User  doesn't exist", "user_id":user_id})
-
+ 
 
 
 
