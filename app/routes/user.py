@@ -1,6 +1,6 @@
 # --------------------- Endpoints ---------------------------------
 
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, Depends
 from app.schemas.user import (
     CreateUserResponse,
     FullUserProfile,
@@ -8,12 +8,11 @@ from app.schemas.user import (
     )
 from app.services.user import UserService
 import logging
+from app.dependencies import rate_limit
+
 
 logger = logging.getLogger(__name__)
 
-
-def rate_limit():
-     pass
 
 
 def create_user_router() -> APIRouter:
@@ -21,6 +20,7 @@ def create_user_router() -> APIRouter:
     user_router = APIRouter(
         prefix = "/user",
         tags = ["user"],
+        dependencies = [Depends(rate_limit)]
         )
     user_service = UserService()
 
@@ -31,10 +31,10 @@ def create_user_router() -> APIRouter:
         return formatted_users
 
     @user_router.get("/{user_id}", response_model=FullUserProfile)
-    async def get_user_by_id(user_id : int, response : Response):
+    async def get_user_by_id(user_id : int):
 
         full_user_profile = await user_service.get_user_info(user_id)
-        response.headers['test-additional-header-value'] = "this is just something i'm adding"
+
         return full_user_profile
 
     @user_router.delete("/{user_id}")
