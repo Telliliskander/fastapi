@@ -15,14 +15,14 @@ logger = logging.getLogger(__name__)
 
 
 
-def create_user_router() -> APIRouter:
+def create_user_router(profile_infos : dict, user_content : dict) -> APIRouter:
 
     user_router = APIRouter(
         prefix = "/user",
         tags = ["user"],
         dependencies = [Depends(rate_limit)]
         )
-    user_service = UserService()
+    user_service = UserService(profile_infos, user_content)
 
     @user_router.get("/all", response_model=MultipleUsersResponse)
     async def get_all_users_paginated(start : int = 0, limit : int = 2):
