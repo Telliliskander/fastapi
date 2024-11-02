@@ -25,7 +25,7 @@ def _users_content():
 #     user_service  = UserService(_profile_infos, _users_content)
 #     return user_service
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="class")
 def testing_fixture():
     print("Initializing fixture")
     return   "a" 
