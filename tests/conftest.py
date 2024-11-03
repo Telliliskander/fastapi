@@ -1,31 +1,5 @@
-import pytest
-from app.services.user import UserService
+import pytest 
 
-@pytest.fixture
-def _profile_infos():
-    return  {
-        0 : {
-            "short_description": "My bio description",
-            "long_bio" : "This is our longer bio",
-        },
-    }    
-
-@pytest.fixture  
-def _users_content():
-    return {
-
-        0 : {
-            "liked_posts" : [1]*3,
-        },
-    }
-
-
-# @pytest.fixture
-# def user_service(_profile_infos, _users_content):
-#     user_service  = UserService(_profile_infos, _users_content)
-#     return user_service
-
-@pytest.fixture(scope="module")
-def testing_fixture():
-    print("Initializing fixture")
-    return   "a" 
+@pytest.fixture(scope='session')
+def valid_user_delete_id() -> int:
+    return 0
