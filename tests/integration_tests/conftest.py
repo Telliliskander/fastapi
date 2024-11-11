@@ -9,4 +9,7 @@ def testing_app():
     testing_app = TestClient(app)
     return testing_app
 
+@pytest.fixture()
+def testing_rate_limit() -> int:
+    return 50
 
