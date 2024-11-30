@@ -19,3 +19,18 @@ services:
         - ENVIRONMENT=test
     volumes: 
       - .:/usr/src
+  
+  postgresdb:
+    image: postgres:14.1-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    volumes: 
+      - pgdb:/var/lib/postgresql/data
+
+volumes : 
+  pgdb: 
+  
